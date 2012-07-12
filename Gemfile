@@ -31,6 +31,10 @@ group :test do
   gem 'guard-spork', '0.3.2'  
   gem 'spork', '0.9.0'
   gem 'launchy', '2.1.0'
+  # Mac OS X
   # gem 'rb-fsevent', '0.9.1', :require => false
   # gem 'growl', '1.0.3'
+  # Linux
+  gem 'rb-inotify', '0.8.8'
+  gem 'libnotify', '0.5.9'
 end
