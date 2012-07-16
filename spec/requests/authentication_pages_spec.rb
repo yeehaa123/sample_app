@@ -39,6 +39,10 @@ describe "Authentication" do
 			describe "followed by signout" do
 				before { click_link "Sign out"}
 				it { should have_link("Sign in") }
+				it { should_not have_link('Profile',	href: user_path(user)) }
+				it { should_not have_link('Settings',	href: edit_user_path(user)) }
+				it { should_not have_link('Sign out', 	href: signout_path) }
+				it { should_not have_link('Users', 		href: users_path) }
 			end
 		end
 	end
@@ -108,7 +112,7 @@ describe "Authentication" do
 			end
 		end
 
-		describe "an non-admin user" do
+		describe "as an non-admin user" do
 			let(:user) { FactoryGirl.create(:user) }
 			let(:non_admin) { FactoryGirl.create(:user) } 
 
@@ -117,6 +121,38 @@ describe "Authentication" do
 			describe "submitting a DELETE request to Users#destroy action" do
 				before { delete user_path(user) }
 				specify { response.should redirect_to(root_path) }
+			end
+		end
+
+		describe "as any user" do
+			let(:user) { FactoryGirl.create(:user) }
+			before { sign_in user }
+
+			describe "submitting a GET request to Users#new action" do
+				before { get new_user_path }
+				specify { response.should redirect_to(root_path) }
+			end
+
+			describe "submitting a POST request to Users#create action" do
+				before { post users_path }			
+				specify { response.should redirect_to(root_path) }
+			end
+		end
+
+		describe "as an admin user" do
+			let(:admin) { FactoryGirl.create(:admin) }
+
+			before { sign_in admin }
+
+			describe "submitting a DELETE request to admin#destroy action" do
+				it "should not delete a user" do
+					expect { delete user_path(admin) }.not_to change(User, :count)
+				end
+			end
+
+			describe "DELETE request to admin#create should redirect" do
+				before { delete user_path(admin) }			
+				specify { response.should redirect_to(users_path) }
 			end
 		end
 	end	

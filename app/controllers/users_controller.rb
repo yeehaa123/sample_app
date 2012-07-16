@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
-before_filter :signed_in_user,  only: [:index, :edit, :update]
-before_filter :correct_user,    only: [:edit, :update]
-before_filter :admin_user, only: :destroy
+before_filter :signed_in_user,      only: [:index, :edit, :update]
+before_filter :correct_user,        only: [:edit, :update]
+before_filter :admin_user,          only: [:destroy]
+before_filter :non_signed_in_user,  only: [:new, :create]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -41,9 +42,13 @@ before_filter :admin_user, only: :destroy
   end
 
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User destroyed"
-    redirect_to users_path
+    if current_user == User.find(params[:id])
+      redirect_to users_path
+    else
+      User.find(params[:id]).destroy
+      flash[:success] = "User destroyed"
+      redirect_to users_path
+    end
   end
 
   private
@@ -61,5 +66,9 @@ before_filter :admin_user, only: :destroy
 
     def admin_user
       redirect_to root_path unless current_user.admin?
+    end
+
+    def non_signed_in_user
+      redirect_to root_path unless !signed_in?
     end
 end

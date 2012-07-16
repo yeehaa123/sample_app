@@ -87,10 +87,7 @@ describe "UserPages" do
 		describe "with valid information " do
 
 			before do
-				fill_in "Name", 		with: "Example User"
-				fill_in "Email",		with: "user@example.com"
-				fill_in "Password",		with: "secret"
-				fill_in "Confirmation",	with: "secret"
+				sign_up_user
 			end
 
 			it "should create a user" do
