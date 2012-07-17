@@ -31,7 +31,6 @@ before_filter :non_signed_in_user,  only: [:new, :create]
   end
 
   def update
-    @user = User.find(params[:id])
     if @user.update_attributes(params[:user])
       sign_in @user
       flash[:success] = "Profile updated"
