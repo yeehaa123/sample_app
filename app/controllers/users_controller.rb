@@ -10,6 +10,7 @@ before_filter :non_signed_in_user,  only: [:new, :create]
 
   def show
   	@user = User.find(params[:id])
+    @microposts =@user.microposts.paginate(page: params[:page])
   end
 
   def new
