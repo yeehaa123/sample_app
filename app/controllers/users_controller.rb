@@ -17,7 +17,6 @@ before_filter :non_signed_in_user,  only: [:new, :create]
   end
 
   def create
-  	@user = User.new(params[:user])
   	if @user.save
       sign_in @user
   		flash[:success] = "Welcome to the Sample App!"
