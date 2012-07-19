@@ -61,14 +61,14 @@ describe "UserPages" do
 
 		before { visit user_path(user) }
 		  
-		 it { should have_selector('h1', 	text: user.name) }
-		 it { should have_selector('title', text: user.name) }
+		it { should have_selector('h1', 	text: user.name) }
+		it { should have_selector('title', text: user.name) }
 
-		 describe "microposts" do
+		describe "microposts" do
 			it { should have_content(m1.content) }
 			it { should have_content(m2.content) }
-			it { should have_content(user.microposts.count) }
-		 end
+			it { should have_content(user.microposts.count) }	
+		end
 	end
 
 	describe "signup" do
@@ -123,7 +123,6 @@ describe "UserPages" do
 		end
 
 		describe "page" do
-
 			it { should have_selector('h1', text: "Update your profile") }
 			it { should have_selector('title', text: "Edit use") }
 			it { should have_link('change', href: 'http://gravatar.com/emails')}

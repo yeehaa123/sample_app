@@ -1,3 +1,4 @@
+
 include ApplicationHelper
 
 RSpec::Matchers.define :have_error_message do |message|

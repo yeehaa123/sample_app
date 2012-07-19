@@ -5,6 +5,7 @@ describe "MicropostPages" do
 	subject { page }
 
 	let(:user) { FactoryGirl.create(:user) }
+	let(:other_user) {FactoryGirl.create(:user) }
 
 	before { sign_in user }
 
@@ -29,10 +30,32 @@ describe "MicropostPages" do
 
 		describe "as correct user" do
 			before { visit root_path }
+			
+			it { should have_link('delete') }
 
 			it "should delete a micropost" do
 				expect { click_link "delete" }.should change(Micropost, :count).by(-1)
 			end
 		end
+
+		describe "as wrong user" do
+			before { visit user_path(other_user) }
+			it { should_not have_link('delete') }
+		end
+	end
+
+	describe "feed behaviour" do
+		before do
+			31.times { FactoryGirl.create(:micropost, user: user) }
+			visit user_path(user)
+		end
+
+		it { should have_selector('div.pagination') }
+
+		it "should list each micropost" do
+			user.feed.paginate(page: 1).each do |item|
+				page.should have_selector("li>span", text: item.content)
+			end
+		end	
 	end
 end
